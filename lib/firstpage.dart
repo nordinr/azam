@@ -15,6 +15,8 @@ class firstPage extends StatefulWidget {
 
 class _firstPageState extends State<firstPage> {
   var paramTextController =  TextEditingController();
+  var newupdatedataController =  TextEditingController();
+
   List listData=[];
 
 
@@ -39,6 +41,81 @@ print(Data.toString());
     super.initState();
     getData();
   }
+
+
+  Future bottomAttachment(idolddata,paramolddatda){
+    return showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Column(
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              SizedBox(height: 30,),
+              Center(
+                child: Text("Update data. old data : ${paramolddatda} "),
+              ),
+              Container(
+                padding: EdgeInsets.all(5.0),
+                child:
+
+                TextField(
+
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Data',
+                    labelText: 'Data',
+                  ),
+                  controller:  newupdatedataController,
+                ),
+              ),
+              SizedBox(height: 30,),
+              MaterialButton(
+                minWidth: MediaQuery.of(context).size.width * 0.90,
+                onPressed: (){
+                  if(newupdatedataController.text!="")
+                  {
+
+
+                  }
+                  else{
+
+                    AlertDialog alert = AlertDialog(
+                      title: Text("Warning"),
+                      content: Text("Sila masukkan data"),
+                      actions: [
+                        TextButton(
+                          child: Text("OK"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    );
+
+                    // show the dialog
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return alert;
+                      },
+                    );
+
+                  }
+                },
+                textColor: Colors.white,
+                color:Colors.blue,
+                padding: const EdgeInsets.all(2.0),
+                child: const Text(
+                  "Update Data",
+                ),
+              ),
+              SizedBox(height: 30,),
+
+            ],
+          );
+        });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -99,6 +176,33 @@ print(Data.toString());
                                     Dio dio = new Dio();
                                     var response = await dio.post('http://192.168.23.71/mobiletest/addrekod', data: {'nokp':paramTextController.text,'nama': widget.param1});
 
+                                    //showAlertDialog(BuildContext context) {
+
+
+
+                                      // set up the AlertDialog
+                                      AlertDialog alert = AlertDialog(
+                                        title: Text("Info"),
+                                        content: Text("Successfull add new record"),
+                                        actions: [
+                                          TextButton(
+                                            child: Text("OK"),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                          )
+                                        ],
+                                      );
+
+                                      // show the dialog
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return alert;
+                                        },
+                                      );
+                                   // }
+
 
                                   print("===============");
                                   print(response.toString());
@@ -117,9 +221,21 @@ print(Data.toString());
                                     shrinkWrap: true,
                                     children: List.generate(listData.length,
                                             (index){
-                                      return ListTile(
-                                        title: Text("${listData[index]['NAMA']}"),
-                                      );
+                                      return /*Row(
+                                        children: [
+                                          Conta
+                                        ],
+                                      );*/
+
+                                        ListTile(
+                                        title: Text("${listData[index]['ID_UMT']}"),
+                                            leading: Text("${listData[index]['NAMA']}",style: TextStyle(fontSize: 12),), // for Right
+                                            trailing: Icon(Icons.edit),
+                                          onTap: (){
+                                            bottomAttachment(listData[index]['ID'],listData[index]['NAMA']);
+                                          },
+
+                                        );
 
 
 

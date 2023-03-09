@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'dart:convert';
 
 class firstPage extends StatefulWidget {
 
@@ -16,9 +17,27 @@ class _firstPageState extends State<firstPage> {
   var paramTextController =  TextEditingController();
   List listData=[];
 
-  
-  getData()async{
 
+  getData()async{
+    Dio dio = new Dio();
+    Response Data = await dio.post('http://192.168.23.71/mobiletest/listrekod', data: {'anydata':""});
+
+print(Data.toString());
+
+    setState(() {
+      var rawData =  json.decode(Data.toString());
+      listData=rawData["data"];
+    });
+    print(listData);
+
+
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getData();
   }
 
   @override
@@ -99,7 +118,7 @@ class _firstPageState extends State<firstPage> {
                                     children: List.generate(listData.length,
                                             (index){
                                       return ListTile(
-                                        title: Text("${listData[index]['plateNo']}"),
+                                        title: Text("${listData[index]['NAMA']}"),
                                       );
 
 
